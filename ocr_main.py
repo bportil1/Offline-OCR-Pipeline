@@ -2,7 +2,7 @@ import os
 import datetime
 import time
 import numpy as np
-from string import digits, ascii_letters, punctuation
+from string import punctuation
 import math
 import cv2
 import pandas as pd
