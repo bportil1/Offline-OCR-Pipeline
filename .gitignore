@@ -8,3 +8,7 @@ extracted_data
 extracted_data/*
 
 ml_pipeline_timings.txt
+
+.dockerignore
+.vscode
+.vscode/*
