@@ -17,7 +17,7 @@ import keras_ocr_detection
 import keras_ocr_tools
 
 
-from scipy.ndimage import maximum_filter
+#from scipy.ndimage import maximum_filter
 from scipy import ndimage
 
 from scipy.signal import find_peaks
