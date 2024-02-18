@@ -1,0 +1,433 @@
+Total images: 26
+Model Loading Time: 34.63059687614441
+Total images: 26
+Model Loading Time: 11.630098819732666
+Total Extraction Time: 399.2952103614807
+Total images: 26
+Model Loading Time: 11.332518339157104
+Total images: 26
+Model Loading Time: 11.26563811302185
+Total images: 26
+Model Loading Time: 11.57137155532837
+Total images: 26
+Model Loading Time: 11.304884910583496
+Total Extraction Time: 387.39164876937866
+Total images: 26
+Model Loading Time: 11.229727983474731
+Total images: 26
+Model Loading Time: 11.206326484680176
+Total images: 26
+Model Loading Time: 11.274683952331543
+Total Extraction Time: 378.6243703365326
+Total images: 26
+Model Loading Time: 11.33786916732788
+Total Extraction Time: 377.69617557525635
+Total images: 26
+Model Loading Time: 11.211326599121094
+Total images: 26
+Model Loading Time: 11.249293327331543
+Total Extraction Time: 371.7043454647064
+Total images: 26
+Model Loading Time: 11.359298467636108
+Total images: 26
+Model Loading Time: 12.560862064361572
+Total Extraction Time: 452.04931259155273
+Total images: 26
+Model Loading Time: 11.13154149055481
+Total Extraction Time: 511.6896674633026
+Total images: 74
+Model Loading Time: 12.114676475524902
+Total images: 26
+Model Loading Time: 25.766164779663086
+Total Extraction Time: 482.01598358154297
+Total images: 26
+Model Loading Time: 11.76991081237793
+Total Extraction Time: 548.3566632270813
+Total images: 26
+Model Loading Time: 41.6612434387207
+Total images: 26
+Model Loading Time: 11.355568647384644
+Total Extraction Time: 350.2686514854431
+Total images: 26
+Model Loading Time: 10.389508962631226
+Total Extraction Time: 363.41471552848816
+Total images: 74
+Model Loading Time: 10.392364025115967
+Total Extraction Time: 1769.5118644237518
+Total images: 20
+Model Loading Time: 10.29061222076416
+Total Extraction Time: 257.8890931606293
+Total images: 20
+Model Loading Time: 10.312846660614014
+Total Extraction Time: 454.7600667476654
+Total images: 20
+Model Loading Time: 10.277636289596558
+Total Extraction Time: 270.37236523628235
+Total images: 26
+Model Loading Time: 13.24478530883789
+Total Extraction Time: 452.3485105037689
+Total images: 26
+Model Loading Time: 43.9513041973114
+Total images: 26
+Model Loading Time: 13.970787048339844
+Total Extraction Time: 501.4838743209839
+Total images: 26
+Model Loading Time: 13.60211443901062
+Total Extraction Time: 553.3815197944641
+Total images: 74
+Model Loading Time: 12.96045184135437
+Total images: 26
+Model Loading Time: 13.56137752532959
+Total Extraction Time: 502.46204113960266
+Total images: 26
+Model Loading Time: 13.930891036987305
+Total Extraction Time: 577.8325755596161
+Total images: 74
+Model Loading Time: 12.902000665664673
+Total images: 26
+Model Loading Time: 11.798954725265503
+Total Extraction Time: 449.1610960960388
+Total images: 26
+Model Loading Time: 11.554326057434082
+Total Extraction Time: 502.93293619155884
+Total images: 74
+Model Loading Time: 11.696519374847412
+Total images: 26
+Model Loading Time: 12.220926523208618
+Total Extraction Time: 448.5627508163452
+Total images: 26
+Model Loading Time: 13.537450313568115
+Total Extraction Time: 502.5955832004547
+Total images: 74
+Model Loading Time: 12.891648054122925
+Total images: 26
+Model Loading Time: 12.815890789031982
+Total Extraction Time: 545.707442522049
+Total images: 26
+Model Loading Time: 12.751501321792603
+Total Extraction Time: 538.4944899082184
+Total images: 74
+Model Loading Time: 12.86303162574768
+Total images: 26
+Model Loading Time: 12.318645000457764
+Total Extraction Time: 495.64211988449097
+Total images: 26
+Model Loading Time: 13.826635360717773
+Total Extraction Time: 554.429482460022
+Total images: 26
+Model Loading Time: 14.082704782485962
+Total Extraction Time: 753.2875037193298
+Total images: 26
+Model Loading Time: 12.267967462539673
+Total images: 26
+Model Loading Time: 12.173738241195679
+Total Extraction Time: 513.9100222587585
+Total images: 26
+Model Loading Time: 41.845590114593506
+Total Extraction Time: 450.49366569519043
+Total images: 26
+Model Loading Time: 11.605030536651611
+Total Extraction Time: 518.6579382419586
+Total images: 26
+Model Loading Time: 11.602404356002808
+Total Extraction Time: 440.02257919311523
+Total images: 26
+Model Loading Time: 11.210020303726196
+Total Extraction Time: 519.433767080307
+Total images: 26
+Model Loading Time: 11.618831634521484
+Total Extraction Time: 441.09238481521606
+Total images: 26
+Model Loading Time: 13.22659707069397
+Total Extraction Time: 515.4809048175812
+Total images: 26
+Model Loading Time: 11.70207667350769
+Total Extraction Time: 445.1755132675171
+Total images: 26
+Model Loading Time: 11.813134908676147
+Total Extraction Time: 507.6301329135895
+Total images: 74
+Model Loading Time: 11.706824541091919
+Total Extraction Time: 1877.3552985191345
+Total images: 20
+Model Loading Time: 10.53835391998291
+Total Extraction Time: 281.2200767993927
+Total images: 20
+Model Loading Time: 10.594601392745972
+Total Extraction Time: 472.0667796134949
+Total images: 20
+Model Loading Time: 10.60880708694458
+Total Extraction Time: 299.6418459415436
+Total images: 26
+Model Loading Time: 23.343003273010254
+Total Extraction Time: 461.36137890815735
+Total images: 26
+Model Loading Time: 14.360167503356934
+Total Extraction Time: 542.8865859508514
+Total images: 26
+Model Loading Time: 13.165776014328003
+Total Extraction Time: 437.8866891860962
+Total images: 26
+Model Loading Time: 14.183706283569336
+Total Extraction Time: 519.8516776561737
+Total images: 74
+Model Loading Time: 13.75587010383606
+Total Extraction Time: 2158.128507375717
+Total images: 63
+Model Loading Time: 14.371489763259888
+Total images: 60
+Model Loading Time: 11.21035623550415
+Total Extraction Time: 756.1222627162933
+Total images: 174
+Model Loading Time: 10.522286415100098
+Total Extraction Time: 3410.662019968033
+Total images: 60
+Model Loading Time: 11.369985580444336
+Total images: 60
+Model Loading Time: 12.126153945922852
+Total images: 60
+Model Loading Time: 11.301658630371094
+Total images: 60
+Model Loading Time: 11.139233112335205
+Total Extraction Time: 775.3674507141113
+Total images: 174
+Model Loading Time: 10.698946714401245
+Total Extraction Time: 3304.5811252593994
+Total images: 60
+Model Loading Time: 27.376863718032837
+Total Extraction Time: 1031.0947585105896
+Total images: 60
+Model Loading Time: 23.24670171737671
+Total Extraction Time: 1067.1366152763367
+Total images: 60
+Model Loading Time: 31.669859170913696
+Total Extraction Time: 6657.444272279739
+Total images: 174
+Model Loading Time: 22.301879167556763
+Total Extraction Time: 4013.249251127243
+Total images: 60
+Model Loading Time: 12.584328651428223
+Total Extraction Time: 966.0227081775665
+Total images: 60
+Model Loading Time: 99.00972437858582
+Total Extraction Time: 4112.284873485565
+Total images: 174
+Model Loading Time: 11.846044063568115
+Total Extraction Time: 4010.4649138450623
+Total images: 60
+Model Loading Time: 14.164048433303833
+Total Extraction Time: 5327.70339679718
+Total images: 174
+Model Loading Time: 11.07122015953064
+Total Extraction Time: 3426.3540222644806
+Total images: 60
+Model Loading Time: 11.156046628952026
+Total Extraction Time: 765.5356512069702
+Total images: 174
+Model Loading Time: 10.73997688293457
+Total Extraction Time: 3316.951211452484
+Total images: 60
+Model Loading Time: 11.837791204452515
+Total images: 60
+Model Loading Time: 13.365559816360474
+Total Extraction Time: 1009.6097314357758
+Total images: 174
+Model Loading Time: 14.033765077590942
+Total Extraction Time: 4279.341156005859
+Total images: 60
+Model Loading Time: 12.469213724136353
+Total Extraction Time: 1007.7814428806305
+Total images: 174
+Model Loading Time: 11.751953840255737
+Total Extraction Time: 7442.695094347
+Total images: 60
+Model Loading Time: 12.382116794586182
+Total Extraction Time: 825.126247882843
+Total images: 174
+Model Loading Time: 11.028984785079956
+Total Extraction Time: 3490.6166763305664
+Total images: 60
+Model Loading Time: 11.233241081237793
+Total Extraction Time: 770.1620121002197
+Total images: 60
+Model Loading Time: 11.673141717910767
+Total Extraction Time: 849.0525643825531
+Total images: 60
+Model Loading Time: 11.169939517974854
+Total Extraction Time: 770.6568970680237
+Total images: 174
+Model Loading Time: 10.727995872497559
+Total Extraction Time: 3329.7131960392
+Total images: 60
+Model Loading Time: 11.865354299545288
+Total images: 60
+Model Loading Time: 12.597262144088745
+Total Extraction Time: 978.8758978843689
+Total images: 174
+Model Loading Time: 13.18091893196106
+Total Extraction Time: 3874.374378681183
+Total images: 60
+Model Loading Time: 11.595090627670288
+Total Extraction Time: 856.7568480968475
+Total images: 60
+Model Loading Time: 11.4719979763031
+Total Extraction Time: 940.2720351219177
+Total images: 60
+Model Loading Time: 11.339669466018677
+Total Extraction Time: 978.0013618469238
+Total images: 60
+Model Loading Time: 11.605241537094116
+Total Extraction Time: 989.5219597816467
+Total images: 59
+Model Loading Time: 11.81566596031189
+Total images: 58
+Model Loading Time: 11.555120944976807
+Total Extraction Time: 875.7357506752014
+Total images: 172
+Model Loading Time: 11.378796339035034
+Total Extraction Time: 4226.016104698181
+Total images: 58
+Model Loading Time: 19.741732597351074
+Total Extraction Time: 913.8302149772644
+Total images: 58
+Model Loading Time: 21.160739421844482
+Total Extraction Time: 9476.418092012405
+Total images: 172
+Model Loading Time: 12.732261896133423
+Total Extraction Time: 4794.26159119606
+Total images: 58
+Model Loading Time: 12.807247638702393
+Total Extraction Time: 851.4656631946564
+Total images: 172
+Model Loading Time: 10.948338031768799
+Total Extraction Time: 4062.400524377823
+Total images: 58
+Model Loading Time: 13.187960624694824
+Total Extraction Time: 1275.2798435688019
+Total images: 58
+Model Loading Time: 12.622689247131348
+Total Extraction Time: 1077.607212305069
+Total images: 58
+Model Loading Time: 15.171053409576416
+Total Extraction Time: 1093.9176511764526
+Total images: 58
+Model Loading Time: 20.85842275619507
+Total images: 59
+Model Loading Time: 13.563552379608154
+Total images: 50
+Model Loading Time: 13.537891149520874
+Total Extraction Time: 878.5562870502472
+Total images: 149
+Model Loading Time: 13.56016731262207
+Total images: 50
+Model Loading Time: 28.867575645446777
+Total Extraction Time: 850.1863458156586
+Total images: 50
+Model Loading Time: 13.651456356048584
+Total Extraction Time: 917.5554180145264
+Total images: 147
+Model Loading Time: 14.64851713180542
+Total images: 50
+Model Loading Time: 12.925994157791138
+Total Extraction Time: 856.1145684719086
+Total images: 146
+Model Loading Time: 12.83011794090271
+Total Extraction Time: 3550.117949962616
+Total images: 50
+Model Loading Time: 13.889257669448853
+Total Extraction Time: 870.1715321540833
+Total images: 146
+Model Loading Time: 11.247596740722656
+Total Extraction Time: 3571.8174393177032
+Total images: 50
+Model Loading Time: 41.22493314743042
+Total Extraction Time: 625.6754865646362
+Total images: 146
+Model Loading Time: 10.625439643859863
+Total Extraction Time: 2667.39257311821
+Total images: 50
+Model Loading Time: 10.867338418960571
+Total Extraction Time: 590.3250706195831
+Total images: 146
+Model Loading Time: 10.47179365158081
+Total Extraction Time: 2532.8847980499268
+Total images: 50
+Model Loading Time: 12.280088663101196
+Total Extraction Time: 854.3151314258575
+Total images: 146
+Model Loading Time: 14.088381052017212
+Total Extraction Time: 3297.394008398056
+Total images: 50
+Model Loading Time: 12.20853304862976
+Total Extraction Time: 779.1091816425323
+Total images: 146
+Model Loading Time: 11.845453977584839
+Total Extraction Time: 3191.9849565029144
+Total images: 50
+Model Loading Time: 12.508147954940796
+Total Extraction Time: 634.2733182907104
+Total images: 146
+Model Loading Time: 10.728207349777222
+Total Extraction Time: 2720.69313788414
+Total images: 50
+Model Loading Time: 13.179025888442993
+Total images: 50
+Model Loading Time: 11.31480360031128
+Total images: 50
+Model Loading Time: 11.219460010528564
+Total images: 50
+Model Loading Time: 11.442293643951416
+Total images: 50
+Model Loading Time: 11.568136930465698
+Total images: 50
+Model Loading Time: 11.199559926986694
+Total images: 50
+Model Loading Time: 11.308171033859253
+Total images: 50
+Model Loading Time: 12.25885558128357
+Total images: 50
+Model Loading Time: 11.672160387039185
+Total Extraction Time: 749.5833296775818
+Total images: 50
+Model Loading Time: 11.896546602249146
+Total Extraction Time: 760.8379323482513
+Total images: 50
+Model Loading Time: 11.459470987319946
+Total images: 50
+Model Loading Time: 11.689657211303711
+Total Extraction Time: 671.8409523963928
+Total images: 1
+Model Loading Time: 10.912244319915771
+Total images: 2
+Model Loading Time: 10.994216203689575
+Total Extraction Time: 119.7352933883667
+Total images: 2
+Model Loading Time: 15.556302309036255
+Total Extraction Time: 163.81129121780396
+Total images: 2
+Model Loading Time: 17.93727207183838
+Total images: 2
+Model Loading Time: 17.89400553703308
+Total images: 2
+Model Loading Time: 9.529672861099243
+Total images: 2
+Model Loading Time: 9.401726484298706
+Total Extraction Time: 81.22412443161011
+Total images: 50
+Model Loading Time: 9.543986797332764
+Total Extraction Time: 1199.3553459644318
+Total images: 144
+Model Loading Time: 9.595500230789185
+Total Extraction Time: 4009.134838104248
+Total images: 50
+Model Loading Time: 10.422873258590698
+Total Extraction Time: 491.6711173057556
+Total images: 144
+Model Loading Time: 9.810654640197754
+Total Extraction Time: 2437.5150990486145
+Total images: 50
+Model Loading Time: 11.695448160171509
+Total Extraction Time: 638.9013516902924
+Model Loading Time: 12.03129267692566
+Total images: 194
+Image Processing Time: 3102.5454485416412
