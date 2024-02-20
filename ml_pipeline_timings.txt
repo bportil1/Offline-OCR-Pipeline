@@ -431,3 +431,34 @@ Total Extraction Time: 638.9013516902924
 Model Loading Time: 12.03129267692566
 Total images: 194
 Image Processing Time: 3102.5454485416412
+running from here
+Model Loading Time: 26.881067514419556
+Total images: 194
+Image Processing Time: 3063.7480776309967
+Model Loading Time: 26.92590641975403
+
+Model Loading Time: 41.79992151260376
+Model Loading Time: 41.835750102996826
+Model Loading Time: 36.93856120109558
+Model Loading Time: 37.77678823471069
+
+Model Loading Time: 11.344401597976685
+Model Loading Time: 11.26759386062622
+Model Loading Time: 13.839113712310791
+Model Loading Time: 12.832507371902466
+Model Loading Time: 11.630263328552246
+Model Loading Time: 11.903475761413574
+Model Loading Time: 12.597493410110474
+Model Loading Time: 11.725711107254028
+Model Loading Time: 11.842707872390747
+Model Loading Time: 11.545634984970093
+Model Loading Time: 12.05743145942688
+
+START FROM HERE
+Total images: 194
+Image Processing Time: 2301.5250973701477
+Model Loading Time: 10.408121347427368
+Model Loading Time: 10.375523805618286
+Total images: 194
+Image Processing Time: 2355.54948925972
+Model Loading Time: 10.373712062835693

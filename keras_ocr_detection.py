@@ -683,7 +683,7 @@ class Detector:
                 pretrained_key in PRETRAINED_WEIGHTS
             ), "Selected weights configuration not found."
             weights_config = PRETRAINED_WEIGHTS[pretrained_key]
-            weights_path = './ml_models/ocr_models/craft_mlt_25k.h5'
+            weights_path = './ml_models/ocr_models/craft_mlt_25k.pth'
             
         else:
             weights_path = None
