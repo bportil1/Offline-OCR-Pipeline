@@ -11,17 +11,21 @@ from transformers import TrOCRProcessor, VisionEncoderDecoderModel, utils
 import pickle
 
 import multiprocessing
-from concurrent.futures import ThreadPoolExecutor
-from gc import collect
-
-import copy
+#from concurrent.futures import ThreadPoolExecutor
 
 import keras_ocr_detection
 import keras_ocr_tools
 
+from skimage.transform import radon
 
-#from scipy.ndimage import maximum_filter
-from scipy import ndimage
+from scipy import ndimage as ndi
+
+from skimage.filters import gabor_kernel
+
+from scipy.ndimage import interpolation as inter
+
+
+#from scipy import ndimage
 
 from scipy.signal import find_peaks
 
@@ -47,7 +51,7 @@ count = 0
 device = 'cpu'
 
 class ocr():
-    def __init__(self):
+    def __init__(self, load_ocr_models=True, load_field_classifier=False):
         self.processor_typed = ''
         self.model_typed = ''
         self.processor_hw = ''
@@ -55,20 +59,23 @@ class ocr():
         self.writing_classifier = ''
         self.field_classifier = ''
         self.detector = ''
-        self.load_models()
+        if load_ocr_models:
+            self.load_ocr_models()
+        if load_field_classifier:
+            self.load_field_classifier()
 
-    def load_models(self):
+    def load_ocr_models(self):
         """
         Function to load text detection, text recognition, and text classification models
 
         :return: Text detection, text recognition, and classification models
         """
         print("Loading Models")
-        self.writing_classifier = pickle.load(open("./ml_models/text_type_classifiers/hgbc_model.sav", 'rb'))
-        self.field_classifier = pickle.load(open("./ml_models/label_classifiers/hgbc_model.sav", 'rb'))
+        self.writing_classifier = pickle.load(open("./ml_models/text_type_classifiers/etc_model.sav", 'rb'))
         print("Loading keras_ocr models")
         self.detector = keras_ocr_detection.Detector(weights='clovaai_general')
         print("Loading trocr models")
+        
         self.processor_typed = TrOCRProcessor.from_pretrained('./ml_models/ocr_models/typed_ocr_models')
         self.model_typed = VisionEncoderDecoderModel.from_pretrained(
             './ml_models/ocr_models/typed_ocr_models'
@@ -77,7 +84,11 @@ class ocr():
         self.model_hw = VisionEncoderDecoderModel.from_pretrained(
             './ml_models/ocr_models/hw_ocr_models'
         ).to(device)
+        
         print("Successfully Loaded Models")
+
+    def load_field_classifier(self):
+        self.field_classifier = pickle.load(open("./ml_models/label_classifiers/hgbc_model.sav", 'rb'))
 
 def dir_validation(dir):
     """
@@ -116,50 +127,81 @@ def img_recognition(img_path):
     :return: Dictionary with extracted data as {image path: extracted text}
     """
     global count, img_read_flag
+
     extractions = {}
     ext_txt = ""
     datapath1 = "extracted_data/label_data.csv" 
     print("Beggining extraction  on image: ", img_path)
-    while img_read_flag == False:
-        pass
-    img_read_flag = False
+    #while img_read_flag == False:
+    #    pass
+    #img_read_flag = False
+
     img = keras_ocr_tools.read(img_path)
-    pred = ocr_obj1.detector.detect([img_path])
+    
+    pred = ocr_obj.detector.detect([img_path])
+    
+    '''
+    
+    img = cv2.imread(img_path)
+
+    ##### added for testing
+    label = text_classification(img)
+    ext_txt = "BERGAS"
+    new_df = pd.DataFrame({ "label":label, "file": img_path})
+    new_df.to_csv(datapath1, mode='a', index=False, header=False)
+    
+    '''
+
+    #idx = 0
+    #out_p = 'C:/Users/Karkaras/Desktop/new_extracts'
+    
     img_read_flag = True
     pred = get_distance(pred)
-    pred = list(distinguish_rows(pred))
-    for row in pred:
-        row = sorted(row, key=lambda x:x['dist_from_origin'])
-        for box in row:
-            uby = int(round(box['top_left_y'])) if int(round(box['top_left_y'])) >= 0 else 0
-            lby = int(round(box['bottom_right_y'])) if int(round(box['bottom_right_y'])) >= 0 else 0
-            ubx = int(round(box['top_left_x'])) if int(round(box['top_left_x'])) >= 0 else 0
-            lbx = int(round(box['bottom_right_x'])) if int(round(box['bottom_right_x'])) >= 0 else 0
-            if ubx >= lbx:
-                ubx = ubx - (ubx - lbx + 1)
-            if uby >= lby:
-                uby = lby - (uby - lby + 1)
-            cropped_img = img[uby:lby, ubx:lbx]
-            label = text_classification(cropped_img)
-            if label == 'typed':
-                ext_txt = ext_txt + " " + text_recognition(
-                    cropped_img,
-                    label
-                )
-            elif label == 'handwritten':
-                ext_txt = ext_txt + " " + text_recognition(
-                    cropped_img,
-                    label
-                )
-            new_df = pd.DataFrame({ "label":label, "file": img_path})
-            new_df.to_csv(datapath1, mode='a', index=False, header=False)
-            ext_txt = ''.join('' if c in punctuation else c for c in ext_txt)
-            ext_txt = ' '.join(ext_txt.split())
-            del cropped_img
-            collect()
+    pred = list(distinguish_groups(pred))
+
+    for group in pred:
+        group = list(distinguish_rows(group))
+        for row in group:
+            row = sorted(row, key=lambda x:x['distance_x'])
+            for box in row:
+                uby = int(round(box['top_left_y'])) if int(round(box['top_left_y'])) >= 0 else 0
+                lby = int(round(box['bottom_right_y'])) if int(round(box['bottom_right_y'])) >= 0 else 0
+                ubx = int(round(box['top_left_x'])) if int(round(box['top_left_x'])) >= 0 else 0
+                lbx = int(round(box['bottom_right_x'])) if int(round(box['bottom_right_x'])) >= 0 else 0
+                if ubx >= lbx:
+                    ubx = ubx - (ubx - lbx + 1)
+                if uby >= lby:
+                    uby = lby - (uby - lby + 1)
+                cropped_img = img[uby:lby, ubx:lbx]
+                label = text_classification(cropped_img)
+                
+                if label in [ 'typed', 'cover' ]:
+                    ext_txt = ext_txt + " " + text_recognition(
+                        cropped_img,
+                        label
+                    )
+                elif label == 'handwritten':
+                    ext_txt = ext_txt + " " + text_recognition(
+                        cropped_img,
+                        label
+                    )
+                
+                new_df = pd.DataFrame({ "label":label, "file": img_path})
+                new_df.to_csv(datapath1, mode='a', index=False, header=False)
+                #ext_txt = ''.join('' if c in punctuation else c for c in ext_txt)
+                #ext_txt = ' '.join(ext_txt.split())
+
+                #name = os.path.join(out_p, os.path.basename(img_path)[:-4])
+                #name = name + str(idx) + ".png"
+                #cv2.imwrite(name, cropped_img)
+                #idx+=1
+
+    
+
     extractions[img_path] = ext_txt
     print("Completed extraction on image: ", img_path)
     #count += 1
+
     return extractions
 
 def text_recognition(image, label):
@@ -172,39 +214,66 @@ def text_recognition(image, label):
     :return: The extracted text.
     """
 
-    if label == "typed":
-        pixel_values = ocr_obj1.processor_typed(image, return_tensors='pt').pixel_values.to(device)
-        generated_ids = ocr_obj1.model_typed.generate(pixel_values)
-        generated_text = ocr_obj1.processor_typed.batch_decode(generated_ids, skip_special_tokens=True)[0]
-
+    if label in [ 'typed', 'cover' ]:
+        pixel_values = ocr_obj.processor_typed(image, return_tensors='pt').pixel_values.to(device)
+        generated_ids = ocr_obj.model_typed.generate(pixel_values)
+        generated_text = ocr_obj.processor_typed.batch_decode(generated_ids, skip_special_tokens=True)[0]
     else:
-        pixel_values = ocr_obj1.processor_hw(image, return_tensors='pt').pixel_values.to(device)
-        generated_ids = ocr_obj1.model_hw.generate(pixel_values)
-        generated_text = ocr_obj1.processor_hw.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        pixel_values = ocr_obj.processor_hw(image, return_tensors='pt').pixel_values.to(device)
+        generated_ids = ocr_obj.model_hw.generate(pixel_values)
+        generated_text = ocr_obj.processor_hw.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
     return generated_text
 
-def distinguish_rows(lst, thresh=50):
+def distinguish_groups(lst):
+    """
+    Parses returned bounding boxes from objected detected function by text sections
+    :param lst: List of bounding boxes
+    :return: Sublists containing the bounding boxes grouped by text sections
+    """
+    sublists = []
+    for i in range(0, len(lst)):
+        added = False
+        if i == 0:
+            sublists.append([lst[i]])
+            continue
+        for j in range(0, len(sublists)):
+            if added == True:
+                break
+            for k in range(0, len(sublists[j])):
+                if added == True:
+                    break
+                if abs(sublists[j][k]['dist_from_origin'] - lst[i]['dist_from_origin']) <= \
+                      (sublists[j][k]['height'] + lst[i]['height']) / 2: 
+                    sublists[j].append(lst[i])
+                    added = True
+
+        if added == False:
+            sublists.append([lst[i]])
+    return sublists
+
+def distinguish_rows(lst):
     """
     Parses returned bounding boxes from objected detected function by rows
     :param lst: List of bounding boxes
-    :param thresh: Max distance between bounding boxes
-    :return: Sublists containing the bounding boxes grouped by row
+    :return: Sublists containing the bounding boxes grouped by rows
     """
-
     sublists = []
+    if len(lst) == 1:
+        sublists.append(lst[0])
     for i in range(0, len(lst)-1):
-        if lst[i+1]['distance_y'] - lst[i]['distance_y'] <= thresh:
+        if abs(lst[i+1]['distance_y'] - lst[i]['distance_y']) <=  \
+           (lst[i]['height'] + lst[i+1]['height']) / 4: 
             if lst[i] not in sublists:
                 sublists.append(lst[i])
             sublists.append(lst[i+1])
         else:
             if i == 0:
-                sublists.append(lst[i])
+                sublists.append(lst[i])        
             yield sublists
             sublists = [lst[i+1]]
     yield sublists
-
+    
 def get_distance(preds):
     """
     Gathers measurements for a list of bounding boxes for further processing
@@ -220,29 +289,33 @@ def get_distance(preds):
         bottom_right_x, bottom_right_y = group[2]
         center_x = (top_left_x + bottom_right_x)/2
         center_y = (top_left_y + bottom_right_y)/2
-        dist_from_origin = math.dist([x0,y0], [center_x, center_y])
+        dist_from_origin = math.dist([x0,y0], [.2*center_x, 1.8*center_y])
         distance_y = center_y - y0
+        distance_x = center_x - x0
+        height = abs(top_left_y - bottom_right_y)
         detections.append({
             'top_left_x': top_left_x,
             'top_left_y': top_left_y,
             'bottom_right_x': bottom_right_x,
             'bottom_right_y': bottom_right_y,
             'dist_from_origin': dist_from_origin,
-            'distance_y': distance_y})
+            'distance_y': distance_y,
+            'distance_x': distance_x,
+            'height': height
+            })
         idx = idx + 1
     return detections
 
-def text_classification(img):
-    """
-    Function to classify text within an image as handwritten or typed
 
-    :param img: Image with text
-    :param classifier: Model to classify image
-    :return: Label from resulting classification
-    """
+def longestZeroSeqLength(a):
+    chg = np.abs(np.diff(np.equal(a, 0).view(np.int8), prepend=[0], append=[0]))
+    rng = np.where(chg == 1)[0]
+    if rng.size == 0: return 0    
+    rng = rng.reshape(-1, 2)
+    return np.subtract(rng[:,1], rng[:,0]).max()
 
-    img_num = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    th, th_img = cv2.threshold(img_num, 0,255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+def get_gray_img_features(img_num, th):
+
     img_height, img_width = np.array(img_num).shape
     counts, bins = np.histogram(img_num, range(257))    
     peaks = find_peaks(counts)
@@ -260,15 +333,272 @@ def text_classification(img):
     upper_quart_perc = (upper_quart_count / (img_width * img_height) if (img_width * img_height) > 0 else 1)*100
     lower_quart_count = np.count_nonzero(img_num <= (min_int + quart_range))
     lower_quart_perc = (lower_quart_count / (img_width * img_height) if (img_width * img_height) > 0 else 1)*100
-    ext_features = np.reshape(  [ log_transformed_mean, th,
-                                maxima_count, 
-                                upper_quart_perc, lower_quart_perc,
-                                log_transformed_std, log_transformed_var] , (1, -1))
-    label = ocr_obj1.writing_classifier.predict(ext_features)
+
+    return [log_transformed_mean, th, maxima_count,
+            upper_quart_perc, lower_quart_perc, 
+            log_transformed_std, log_transformed_var, ]
+
+def get_gabor_features(img_num):
+    ### K1
+
+    #out_list_mean = []
+    out_list_var = []
+
+    kernels = []
+
+    for theta in range(1,17):
+        theta = theta * (180 / 16) 
+        kernel = np.real(gabor_kernel(0.05, theta=theta, sigma_x=1, sigma_y=1))
+        kernels.append(kernel)
+
+    #out_list_mean_local = []
+    out_list_var_local = []
+
+    for kernel in kernels:
+        filtered = ndi.convolve(img_num, kernel, mode='wrap')
+        #out_list_mean_local.append(filtered.mean())
+        out_list_var_local.append(filtered.var())
+    
+    for idx in range(len(out_list_var_local)):
+        #out_list_mean.append(out_list_mean_local[idx])
+        out_list_var.append(out_list_var_local[idx])
+
+    return out_list_var
+
+def get_horizontal_projection_features(th_img):
+    swap_counts = []
+    run_lengths = []
+
+    for row in th_img:
+        run_lengths.append(longestZeroSeqLength(row))
+        swap_counts.append((np.diff(row)!=0).sum())
+
+    hist, bin_edges = np.histogram(run_lengths, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    row_max_run_count = hist[max_run]
+    normed_row_max = bin_edges[max_run]
+    row_hist_mean = hist.mean()
+    row_hist_var = hist.var()
+    row_hist_std = hist.std()
+
+    hist, bin_edges = np.histogram(swap_counts, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    sc_row_max_run_count = hist[max_run]
+    normed_sc_row_max = bin_edges[max_run]
+    sc_row_hist_mean = hist.mean()
+    sc_row_hist_var = hist.var()
+    sc_row_hist_std = hist.std()
+
+    return row_max_run_count, normed_row_max, row_hist_mean, row_hist_var, row_hist_std, \
+           sc_row_max_run_count, normed_sc_row_max, sc_row_hist_mean, sc_row_hist_var, sc_row_hist_std
+
+def get_vertical_projection_features(th_img):
+    swap_counts = []
+    run_lengths = []
+    for col in th_img.T:
+        run_lengths.append(longestZeroSeqLength(col))
+        swap_counts.append((np.diff(col)!=0).sum())
+
+    hist, bin_edges = np.histogram(run_lengths, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    col_max_run_count = hist[max_run]
+    normed_col_max = bin_edges[max_run]
+    col_hist_mean = hist.mean()
+    col_hist_var = hist.var()
+    col_hist_std = hist.std()
+
+    hist, bin_edges = np.histogram(swap_counts, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    sc_col_max_run_count = hist[max_run]
+    normed_sc_col_max = bin_edges[max_run]
+
+    sc_col_hist_mean = hist.mean()
+    sc_col_hist_var = hist.var()
+    sc_col_hist_std = hist.std()
+
+    return col_max_run_count, normed_col_max, col_hist_mean, col_hist_var, col_hist_std, \
+           sc_col_max_run_count, normed_sc_col_max, sc_col_hist_mean, sc_col_hist_var, sc_col_hist_std
+
+
+def get_315_deg_projection_features(th_img):
+    swap_counts = []
+    run_lengths = []
+    curr_row = []
+    idx = 0
+    
+    row_c, col_c, *_ = th_img.shape
+    
+    for row in range(row_c-1,-1,-1):
+        if row == row_c-1:
+            run_lengths.append(longestZeroSeqLength([th_img[row][0]]))
+        for row_idx in range(row, row_c):
+            if idx >= col_c:
+                break
+            curr_row.append(th_img[row_idx][idx])
+            idx += 1
+        swap_counts.append((np.diff(curr_row)!=0).sum())
+        run_lengths.append(longestZeroSeqLength(curr_row))
+        idx = 0
+        curr_row = []
+
+    hist, bin_edges = np.histogram(run_lengths, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    deg_315_max_run_count = hist[max_run]
+    normed_deg_315_max = bin_edges[max_run]
+    deg_315_hist_mean = hist.mean()
+    deg_315_hist_var = hist.var()
+    deg_315_hist_std = hist.std()
+
+    hist, bin_edges = np.histogram(swap_counts, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    sc_deg_315_max_run_count = hist[max_run]
+    normed_sc_deg_315_max = bin_edges[max_run]
+
+    sc_deg_315_hist_mean = hist.mean()
+    sc_deg_315_hist_var = hist.var()
+    sc_deg_315_hist_std = hist.std()
+
+    return deg_315_max_run_count, normed_deg_315_max, deg_315_hist_mean, deg_315_hist_var, deg_315_hist_std, \
+           sc_deg_315_max_run_count, normed_sc_deg_315_max, sc_deg_315_hist_mean, sc_deg_315_hist_var, sc_deg_315_hist_std
+
+def get_225_deg_projection_features(th_img):
+    swap_counts = []
+    run_lengths = []
+    curr_row = []
+
+    row_c, col_c, *_ = th_img.shape
+
+    idx = col_c - 1
+
+    for row in range(row_c-1,-1,-1):
+        if row == row_c-1:
+            run_lengths.append(longestZeroSeqLength([th_img[row][col_c - 1]]))
+        for row_idx in range(row, row_c):
+            if idx >= col_c or idx < 0:
+                break
+            curr_row.append(th_img[row_idx][idx])
+            idx -= 1
+        swap_counts.append((np.diff(curr_row)!=0).sum())
+        run_lengths.append(longestZeroSeqLength(curr_row))
+        idx = col_c - 1
+        curr_row = []
+
+    hist, bin_edges = np.histogram(run_lengths, bins=100, density = True) 
+
+    max_run = hist.argmax()
+
+    deg_225_max_run_count = hist[max_run]
+    normed_deg_225_max = bin_edges[max_run]
+    deg_225_hist_mean = hist.mean()
+    deg_225_hist_var = hist.var()
+    deg_225_hist_std = hist.std()
+
+    hist, bin_edges = np.histogram(swap_counts, bins=100, density = True)
+
+    max_run = hist.argmax()
+
+    sc_deg_225_max_run_count = hist[max_run]
+    normed_sc_deg_225_max = bin_edges[max_run]
+    sc_deg_225_hist_mean = hist.mean()
+    sc_deg_225_hist_var = hist.var()
+    sc_deg_225_hist_std = hist.std()    
+
+    return deg_225_max_run_count, normed_deg_225_max, deg_225_hist_mean, deg_225_hist_var, deg_225_hist_std, \
+           sc_deg_225_max_run_count, normed_sc_deg_225_max, sc_deg_225_hist_mean, sc_deg_225_hist_var, \
+           sc_deg_225_hist_std
+
+
+def text_classification(img):
+    """
+    Function to classify text within an image as handwritten or typed
+
+    :param img: Image with text
+    :param classifier: Model to classify image
+    :return: Label from resulting classification
+    """
+    
+    img_num = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    th, th_img = cv2.threshold(img_num, 0,255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+    out_list = get_gray_img_features(img_num, th)
+
+    out_list_var = get_gabor_features(img_num)
+
+    #### Horizontal Projections
+
+    row_max_run_count, normed_row_max, row_hist_mean, row_hist_var, row_hist_std, \
+           sc_row_max_run_count, normed_sc_row_max, \
+           sc_row_hist_mean, sc_row_hist_var, sc_row_hist_std = get_horizontal_projection_features(th_img)
+
+    #### Vertical Projections
+    col_max_run_count, normed_col_max, col_hist_mean, col_hist_var, col_hist_std, \
+           sc_col_max_run_count, normed_sc_col_max, \
+           sc_col_hist_mean, sc_col_hist_var, sc_col_hist_std = get_vertical_projection_features(th_img)
+        
+    #### 315 deg projections
+
+    deg_315_max_run_count, normed_deg_315_max, deg_315_hist_mean, deg_315_hist_var, deg_315_hist_std, \
+           sc_deg_315_max_run_count, normed_sc_deg_315_max, \
+           sc_deg_315_hist_mean, sc_deg_315_hist_var, \
+           sc_deg_315_hist_std = get_315_deg_projection_features(th_img)
+
+
+    #### 225 deg projections
+
+    deg_225_max_run_count, normed_deg_225_max, deg_225_hist_mean, deg_225_hist_var, deg_225_hist_std, \
+           sc_deg_225_max_run_count, normed_sc_deg_225_max, sc_deg_225_hist_mean, sc_deg_225_hist_var, \
+           sc_deg_225_hist_std = get_225_deg_projection_features(th_img)
+
+    out_list.extend([
+        row_max_run_count, normed_row_max,
+        row_hist_mean, row_hist_var, row_hist_std,
+
+        col_max_run_count, normed_col_max,
+        col_hist_mean, col_hist_var, col_hist_std,
+        
+        deg_315_max_run_count, normed_deg_315_max,
+        deg_315_hist_mean, deg_315_hist_var, deg_315_hist_std, 
+        
+        deg_225_max_run_count, normed_deg_225_max,
+        deg_225_hist_mean, deg_225_hist_var, deg_225_hist_std,
+        
+        sc_row_max_run_count, normed_sc_row_max, 
+        sc_row_hist_mean, sc_row_hist_var, sc_row_hist_std,
+        
+        sc_col_max_run_count, normed_sc_col_max,
+        sc_col_hist_mean, sc_col_hist_var, sc_col_hist_std, 
+        
+        sc_deg_315_max_run_count, normed_sc_deg_315_max,
+        sc_deg_315_hist_mean, sc_deg_315_hist_var, sc_deg_315_hist_std,
+        
+        sc_deg_225_max_run_count, normed_sc_deg_225_max,
+        sc_deg_225_hist_mean, sc_deg_225_hist_var, sc_deg_225_hist_std,   
+    ])
+    
+    #out_list.extend(out_sinogram)
+    #out_list.extend(out_list_mean)
+    out_list.extend(out_list_var)
+    
+    ext_features = np.reshape(out_list, (1, -1))
+
+    label = ocr_obj.writing_classifier.predict(ext_features)
+
     return label
 
-
-def text_feature_extractor(value):
+def text_feature_extractor(value, ocr_obj):
     """
     Function to take measurements from a text string for classification purposes
 
@@ -284,13 +614,10 @@ def text_feature_extractor(value):
     else:
         num_text_ratio = numbers/text_length
     avg_word_length = sum(len(word) for word in value) / words
-
     ext_features = np.reshape(  [text_length, words,
                                     num_text_ratio, avg_word_length] , (1, -1))
-    field = ocr_obj1.field_classifier.predict(ext_features)
+    field = ocr_obj.field_classifier.predict(ext_features)
     return field[0]
-
-    ##### CALLING FUNCTION
 
 def pub_year_extraction(data):
     """
@@ -327,7 +654,7 @@ def write_dataframe(data):
     """
 
     print("Writing Out Data to CSV")
-    curr_time = datetime.datetime.now()
+    ocr_obj = ocr(load_ocr_models=False, load_field_classifier=True) 
     init_datapath = './extracted_data'
     datapath = "extracted_data/extracted_data.csv"
     os.makedirs(init_datapath, exist_ok=True)
@@ -336,7 +663,7 @@ def write_dataframe(data):
     output_data = pd.DataFrame(columns=['extract', 'text_type'])
     title_key = sudoc_key = text_type_1_val = text_type_2_val = text_type_1_key = text_type_2_key = pub_year = ""
     for idx, key in enumerate(data):
-        text_type = text_feature_extractor(data[key])
+        text_type = text_feature_extractor(data[key], ocr_obj)
         if text_type == 'title':
             text_type_1_key = 'Title'
             text_type_1_val = data[key]
@@ -359,43 +686,53 @@ def write_dataframe(data):
     print("Completed Writing Step")
     return datapath
 
-start_time = time.time()
-ocr_obj1 = ocr() 
-load_time = time.time() - start_time
-time_file = open('ml_pipeline_timings.txt', 'a')
-time_file.write("Model Loading Time: " + str(load_time) + "\n")
-
 def main():
     print("Beginning Script")
     time_file = open('ml_pipeline_timings.txt', 'a')
     dirs = [   
-        'C:/Users/Karkaras/Desktop/proc_sample_imgs/whole hw test set',
-        'C:/Users/Karkaras/Desktop/proc_sample_imgs/whole typed test set'
+        #'C:/Users/Karkaras/Desktop/proc_sample_imgs/whole hw test set',
+        #'C:/Users/Karkaras/Desktop/proc_sample_imgs/whole typed test set',
+        #'C:/Users/Karkaras/Desktop/new hw'
+        #'C:/Users/Karkaras/Desktop/new cover'
+        #'C:/Users/Karkaras/Desktop/new typed'
+        #'C:/Users/Karkaras/Desktop/new_extracts'
+        #'C:/Users/Karkaras/Desktop/typescript printed'
+        'C:/Users/Karkaras/Desktop/proc_sample_imgs/test_set/test_hw_sudoc',
+        'C:/Users/Karkaras/Desktop/proc_sample_imgs/test_set/test_title',
+        'C:/Users/Karkaras/Desktop/proc_sample_imgs/test_set/test_typed_sudoc',
+        'C:/Users/Karkaras/Desktop/proc_sample_imgs/test_set/hw_printed_test/hw',
+        'C:/Users/Karkaras/Desktop/proc_sample_imgs/test_set/hw_printed_test/printed_title_page'
+        #'C:/Users/Karkaras/Desktop/cover_imgs/title30cat/224x224'
+        #'E:/test_set/hw_test',
+        #'E:/test_set/cover_test',
+        #'E:/test_set/typed_test'
+        
+
     ]
     #dirs = [ 'C:/Users/Karkaras/Desktop/proc_sample_imgs/detection_play' ]
 
-
     processed_file_count = 0
+    start_time = time.time()
+    with multiprocessing.Pool(processes=2) as pool:
+        for path in dirs:
+            extracted_data = []
+            collected_data = []
+            img_dir = os.listdir(path)
+            img_dir = [os.path.join(path, img) for img in img_dir]
 
-    for path in dirs:
-        extracted_data = []
-        collected_data = []
-        img_dir = os.listdir(path)
-        img_dir = [os.path.join(path, img) for img in img_dir]
+            #img_dir.sort(key=lambda x: os.path.getctime(x))
 
-        #img_dir.sort(key=lambda x: os.path.getctime(x))
+            # images_coll = [ keras_ocr.tools.read(img) for img in img_dir ]
 
-        # images_coll = [ keras_ocr.tools.read(img) for img in img_dir ]
+            # extracted_data = par_img_proc_caller(images_coll)
 
-        # extracted_data = par_img_proc_caller(images_coll)
-
-        total_images = len(img_dir)
-        halfpoint = False
-        with multiprocessing.Pool(processes=2) as pool:
+            total_images = len(img_dir)
+            processed_file_count += total_images
+            halfpoint = False
             for idx in range(0, len(img_dir), 2):
-
                 collected_data.append(pool.apply_async(img_recognition, (img_dir[idx],))) 
                 collected_data.append(pool.apply_async(img_recognition, (img_dir[idx+1],))) 
+
                 for obj in range(len(collected_data)):
                     extracted_data.append(collected_data[obj].get())
 
@@ -405,8 +742,8 @@ def main():
                                 
                 collected_data = []
 
-
-        #extracted_data = par_img_proc_caller(ocr_obj, img_dir)
+        pool.close()
+        pool.join() 
 
         #validation = self.dir_validation(img_dir)
 
@@ -422,15 +759,20 @@ def main():
         #    print("Selected data has an invalid file type")
         #    return
 
-        datapath = write_dataframe(extracted_data)  
-
-        processed_file_count += total_images
+        write_dataframe(extracted_data)  
 
     time_file.write("Total images: " + str(processed_file_count) + "\n")
 
     processing_time = time.time() - start_time
     time_file.write("Image Processing Time: " + str(processing_time) + "\n")
     print("finished image reading lines")
+
+if multiprocessing.current_process().name != 'MainProcess':
+    start_time = time.time()
+    ocr_obj = ocr(load_ocr_models=True, load_field_classifier=False) 
+    load_time = time.time() - start_time
+    time_file = open('ml_pipeline_timings.txt', 'a')
+    time_file.write("Model Loading Time: " + str(load_time) + "\n")
 
 if __name__ == '__main__':
     main()

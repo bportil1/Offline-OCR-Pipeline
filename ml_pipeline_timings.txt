@@ -462,3 +462,313 @@ Model Loading Time: 10.375523805618286
 Total images: 194
 Image Processing Time: 2355.54948925972
 Model Loading Time: 10.373712062835693
+Model Loading Time: 28.900144577026367
+Model Loading Time: 30.072600603103638
+Model Loading Time: 41.467129707336426
+Model Loading Time: 10.449471950531006
+Model Loading Time: 10.472477674484253
+Model Loading Time: 10.409487247467041
+Model Loading Time: 10.424184560775757
+Model Loading Time: 10.39893627166748
+Model Loading Time: 10.426772594451904
+Model Loading Time: 16.06744909286499
+Model Loading Time: 45.71094465255737
+Model Loading Time: 15.489763021469116
+Model Loading Time: 15.40058183670044
+Model Loading Time: 15.359443187713623
+Model Loading Time: 15.060023784637451
+Model Loading Time: 15.086872339248657
+Model Loading Time: 14.942276000976562
+Model Loading Time: 14.966984510421753
+Model Loading Time: 14.908855199813843
+Model Loading Time: 14.997453212738037
+Model Loading Time: 15.013848066329956
+Model Loading Time: 10.813385248184204
+Model Loading Time: 15.26339316368103
+Model Loading Time: 15.380352973937988
+Model Loading Time: 14.864338397979736
+Model Loading Time: 16.346293210983276
+Model Loading Time: 16.218830108642578
+Model Loading Time: 16.242815494537354
+Model Loading Time: 16.241431713104248
+Model Loading Time: 16.256007194519043
+Model Loading Time: 10.596247673034668
+Model Loading Time: 10.587261438369751
+Model Loading Time: 10.562098503112793
+Model Loading Time: 35.75933885574341
+Model Loading Time: 14.623047113418579
+Model Loading Time: 15.437130689620972
+Model Loading Time: 15.429590463638306
+Total images: 144
+Model Loading Time: 25.29096555709839
+
+Total images: 194
+Image Processing Time: 7651.460356473923
+Model Loading Time: 41.06190466880798
+Total images: 194
+Image Processing Time: 2390.0382103919983
+Model Loading Time: 73.46202301979065
+Model Loading Time: 80.65862607955933
+Total images: 194
+Image Processing Time: 3164.9426918029785
+Model Loading Time: 44.274534702301025
+Model Loading Time: 44.25244402885437
+Total images: 194
+Image Processing Time: 2464.484260082245
+Model Loading Time: 35.32248878479004
+Model Loading Time: 35.32944393157959
+Total images: 194
+Image Processing Time: 2521.5356390476227
+Model Loading Time: 41.55698847770691
+Model Loading Time: 41.57990002632141
+Total images: 194
+Image Processing Time: 2566.6391224861145
+Model Loading Time: 30.682718515396118
+Model Loading Time: 30.74073600769043
+Total images: 194
+Image Processing Time: 2466.5476219654083
+Model Loading Time: 24.79128670692444
+Model Loading Time: 24.81402587890625
+Total images: 194
+Image Processing Time: 2516.9827795028687
+Model Loading Time: 48.91850280761719
+
+Total images: 194
+Image Processing Time: 2289.1448662281036
+Model Loading Time: 13.907938480377197
+Model Loading Time: 13.905173301696777
+Total images: 194
+Image Processing Time: 2298.132745027542
+Model Loading Time: 23.23113751411438
+Model Loading Time: 23.204596757888794
+Total images: 194
+Image Processing Time: 2520.42129945755
+Model Loading Time: 11.150609254837036
+Total images: 194
+Image Processing Time: 5657.674854516983
+Model Loading Time: 18.77831745147705
+
+Total images: 194
+Image Processing Time: 2456.6695182323456
+Model Loading Time: 18.19648241996765
+Model Loading Time: 18.181996822357178
+Total images: 194
+Image Processing Time: 2905.8639056682587
+Model Loading Time: 31.947082042694092
+Model Loading Time: 31.986451148986816
+Total images: 194
+Image Processing Time: 2619.9074034690857
+Model Loading Time: 18.39978861808777
+Total images: 194
+Image Processing Time: 3125.829985141754
+Model Loading Time: 45.99897241592407
+Total images: 194
+Image Processing Time: 3023.6299562454224
+Model Loading Time: 18.534515380859375
+Total images: 194
+Image Processing Time: 2234.085442304611
+Model Loading Time: 15.086000919342041
+Model Loading Time: 15.06756329536438
+Total images: 194
+Image Processing Time: 4433.93711066246
+Model Loading Time: 47.45369291305542
+Total images: 194
+Image Processing Time: 3736.142221212387
+Model Loading Time: 18.274266242980957
+Model Loading Time: 18.269366979599
+Total images: 194
+Image Processing Time: 3810.0511763095856
+Model Loading Time: 71.02908396720886
+Total images: 194
+Image Processing Time: 3469.9553413391113
+Model Loading Time: 24.160671949386597
+Total images: 194
+Image Processing Time: 2763.936147212982
+Model Loading Time: 11.437489032745361
+Total images: 194
+Image Processing Time: 2670.951817750931
+Model Loading Time: 46.661205768585205
+Model Loading Time: 46.64386796951294
+Total images: 194
+Image Processing Time: 2967.095773458481
+Model Loading Time: 54.454471826553345
+Model Loading Time: 54.51150989532471
+Total images: 194
+Image Processing Time: 3282.038271188736
+Model Loading Time: 14.308626174926758
+Total images: 8
+Image Processing Time: 947.9932405948639
+Model Loading Time: 30.24641180038452
+
+Total images: 194
+Image Processing Time: 2725.5085966587067
+Model Loading Time: 26.690885305404663
+Total images: 8
+Image Processing Time: 1638.9657628536224
+Model Loading Time: 24.8500337600708
+
+Total images: 194
+Image Processing Time: 2795.4127004146576
+Model Loading Time: 20.193456649780273
+Total images: 6
+Image Processing Time: 101.32491421699524
+Model Loading Time: 30.125069856643677
+Model Loading Time: 12.988056659698486
+Model Loading Time: 12.986566066741943
+Total images: 194
+Image Processing Time: 1053.2747490406036
+Model Loading Time: 28.54106593132019
+
+Total images: 194
+Image Processing Time: 993.4302582740784
+Model Loading Time: 17.889834880828857
+Total images: 60
+Image Processing Time: 266.3218228816986
+Model Loading Time: 23.577624082565308
+Model Loading Time: 23.647099256515503
+Model Loading Time: 36.62995910644531
+Total images: 12
+Image Processing Time: 137.3688530921936
+Model Loading Time: 38.374738693237305
+Total images: 194
+Image Processing Time: 1177.4051394462585
+Model Loading Time: 33.63519835472107
+Total images: 12
+Image Processing Time: 99.71087312698364
+Model Loading Time: 33.32824397087097
+Total images: 12
+Image Processing Time: 101.48564839363098
+Model Loading Time: 11.133587121963501
+Model Loading Time: 0.7958102226257324
+Total images: 30
+Image Processing Time: 164.6651749610901
+Model Loading Time: 0.7814300060272217
+Model Loading Time: 0.7883822917938232
+Model Loading Time: 0.7516622543334961
+Model Loading Time: 0.754737377166748
+Total images: 4
+Image Processing Time: 14.418497323989868
+Model Loading Time: 1.4897990226745605
+Model Loading Time: 1.483342170715332
+Total images: 2
+Image Processing Time: 15.956761837005615
+Model Loading Time: 0.81917405128479
+Model Loading Time: 0.8136413097381592
+Total images: 2
+Image Processing Time: 20.476468801498413
+Model Loading Time: 1.8077564239501953
+Model Loading Time: 1.7544152736663818
+Total images: 2
+Image Processing Time: 51.00451970100403
+Model Loading Time: 0.9861605167388916
+Total images: 4
+Image Processing Time: 20.417662620544434
+Model Loading Time: 1.0550267696380615
+Model Loading Time: 1.058013677597046
+Total images: 2
+Image Processing Time: 20.759982585906982
+Model Loading Time: 1.0816454887390137
+Model Loading Time: 1.0821459293365479
+Total images: 24
+Image Processing Time: 39.346275329589844
+Model Loading Time: 1.088972806930542
+Total images: 2
+Image Processing Time: 16.445506811141968
+Model Loading Time: 1.0852367877960205
+Model Loading Time: 1.0907366275787354
+Total images: 2
+Image Processing Time: 16.739940404891968
+Model Loading Time: 0.9508078098297119
+Model Loading Time: 0.952808141708374
+Total images: 4
+Image Processing Time: 40.2468695640564
+Model Loading Time: 0.8097026348114014
+Model Loading Time: 0.8107044696807861
+Total images: 2
+Image Processing Time: 14.240142345428467
+Model Loading Time: 1.5875697135925293
+Model Loading Time: 1.5873394012451172
+Total images: 108
+Image Processing Time: 248.98313736915588
+Model Loading Time: 0.8065240383148193
+Model Loading Time: 0.8175697326660156
+Total images: 132
+Image Processing Time: 467.72348189353943
+Model Loading Time: 0.8113908767700195
+Model Loading Time: 0.8123874664306641
+Total images: 2
+Image Processing Time: 26.602394104003906
+Model Loading Time: 0.8100941181182861
+Model Loading Time: 0.8175938129425049
+Model Loading Time: 0.9906888008117676
+Total images: 60
+Image Processing Time: 136.78551626205444
+Model Loading Time: 0.9838337898254395
+Model Loading Time: 0.9773085117340088
+Total images: 4
+Image Processing Time: 37.653459310531616
+Model Loading Time: 0.9655506610870361
+Model Loading Time: 0.9645488262176514
+Total images: 40
+Image Processing Time: 68.32954597473145
+Model Loading Time: 0.9949970245361328
+Model Loading Time: 0.9975130558013916
+Model Loading Time: 0.9669737815856934
+Model Loading Time: 0.9674735069274902
+Total images: 10
+Image Processing Time: 15.803990602493286
+Model Loading Time: 0.9850084781646729
+Model Loading Time: 0.9895162582397461
+Total images: 10
+Image Processing Time: 48.9252872467041
+Model Loading Time: 0.9999632835388184
+Model Loading Time: 1.0019824504852295
+Total images: 10
+Image Processing Time: 50.023897647857666
+Model Loading Time: 0.9706258773803711
+Model Loading Time: 0.9706258773803711
+Model Loading Time: 0.9742796421051025
+Model Loading Time: 0.9813017845153809
+Total images: 5838
+Image Processing Time: 190.6739478111267
+Model Loading Time: 0.8183293342590332
+Model Loading Time: 0.8143274784088135
+Total images: 5838
+Image Processing Time: 272.6309058666229
+Model Loading Time: 0.948530912399292
+Model Loading Time: 0.9510304927825928
+Total images: 60
+Image Processing Time: 102.79207801818848
+Model Loading Time: 0.9779565334320068
+Model Loading Time: 0.996084451675415
+Total images: 60
+Image Processing Time: 198.7180016040802
+STARTING HERE
+Model Loading Time: 41.19764590263367
+Total images: 60
+Image Processing Time: 671.2343616485596
+Model Loading Time: 13.106836318969727
+Total images: 60
+Image Processing Time: 698.1229128837585
+Model Loading Time: 13.811959981918335
+Total images: 20
+Image Processing Time: 1076.5845727920532
+Model Loading Time: 42.988088846206665
+Total images: 20
+Image Processing Time: 1049.3146555423737
+Model Loading Time: 11.330522060394287
+Model Loading Time: 11.349555969238281
+Total images: 20
+Image Processing Time: 1009.9530031681061
+Model Loading Time: 18.984442710876465
+Total images: 6
+Image Processing Time: 499.16375732421875
+Model Loading Time: 31.73739790916443
+Total images: 6
+Image Processing Time: 512.6978509426117
+Model Loading Time: 40.567272901535034
+Total images: 6
+Image Processing Time: 530.55118060112
+Model Loading Time: 22.90510582923889
+Total images: 80
+Image Processing Time: 1745.6524968147278

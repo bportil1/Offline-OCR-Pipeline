@@ -12,3 +12,8 @@ ml_pipeline_timings.txt
 .dockerignore
 .vscode
 .vscode/*
+
+docker-compose.debug.yml
+docker-compose.yml
+
+
