@@ -1,0 +1,2 @@
+num_of_imgs,total_proc_time,proc_time_per_img,text_recognition,text_detection,text_type_classification,field_classification,cer_base,cer_no_pct,cer_hw_base,cer_hw_no_pct,cer_typed_base,cer_typed_no_pct,text_type_acc,field_label_acc
+218,973.9171862602234,4.467510028716621,1.793732,0.25723,0.022977,8e-05,0.1437956204379562,0.11322360953461975,0.32610508757297746,0.1539855072463768,0.12140149574838643,0.10847063793831854,0.9587155963302753,0.8853211009174312

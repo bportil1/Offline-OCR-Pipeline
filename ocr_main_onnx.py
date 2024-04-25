@@ -10,33 +10,22 @@ import pickle
 import string 
 
 import multiprocessing
-#from concurrent.futures import ThreadPoolExecutor
-
-#import keras_ocr_detection
-import keras_ocr_tools
-
-#from skimage.transform import radon
 
 from scipy import ndimage as ndi
 
 from skimage.filters import gabor_kernel
 
-#from scipy.ndimage import interpolation as inter
-
-#import tensorflow as tf
-
-#import onnxruntime as ort
-
-import torch
-
-import onnx
-
 import ultralytics 
 
-#from optimum.onnxruntime import ORTModelForVision2Seq
-
+from optimum.onnxruntime import ORTModelForVision2Seq
 
 from scipy.signal import find_peaks
+
+from onnxruntime import InferenceSession
+
+from onnxruntime import SessionOptions
+
+from onnxruntime import ExecutionMode
 
 def warn(*args, **kwargs):
     """
@@ -90,27 +79,39 @@ class ocr():
         :return: Text detection, text recognition, and classification models
         """
         print("Loading Models")
-        self.writing_classifier = pickle.load(open("./ml_models/text_type_classifiers/etc_model.sav", 'rb'))
+
+        #self.writing_classifier = pickle.load(open("./ml_models/text_type_classifiers/etc_model.sav", 'rb'))
+        self.writing_classifier = InferenceSession("./ml_models/text_type_classifiers/tt_onnx_etc_model.onnx" \
+                        , providers=["CPUExecutionProvider"])
+        
         print("Loading text detector")
 
-        self.detector = ultralytics.YOLO('./ml_models/yolotextdet.pt')
-
-        #self.detector = ort.InferenceSession('detector_quantized_dynamic_preprocessed.onnx')
+        self.detector = ultralytics.YOLO('./ml_models/yolotextdet.pt').to(device)
 
         print("Loading trocr models")
-        
+
         self.processor_typed = TrOCRProcessor.from_pretrained('./ml_models/ocr_models/typed_ocr_models')
         self.model_typed = VisionEncoderDecoderModel.from_pretrained(
             './ml_models/ocr_models/typed_ocr_models'
         ).to(device)
 
+        '''
+        self.processor_typed = TrOCRProcessor.from_pretrained('e:/models--microsoft--trocr-large-str/snapshots/1105e441eaa192e99f3991d2958134348c623f4f')
+        self.model_typed = VisionEncoderDecoderModel.from_pretrained(
+            'e:/models--microsoft--trocr-large-str/snapshots/1105e441eaa192e99f3991d2958134348c623f4f'
+        ).to(device)
+        '''
+
         self.processor_hw = TrOCRProcessor.from_pretrained('./ml_models/ocr_models/hw_ocr_models')
         self.model_hw = VisionEncoderDecoderModel.from_pretrained(
             './ml_models/ocr_models/hw_ocr_models'
         ).to(device)
-        
-        
-        
+        '''
+        self.processor_hw = TrOCRProcessor.from_pretrained('./ml_models/ocr_models/hw_ocr_models_2')
+        self.model_hw = VisionEncoderDecoderModel.from_pretrained(
+            './ml_models/ocr_models/hw_ocr_models_2'
+        ).to(device)
+        '''
         '''
         self.processor_typed = TrOCRProcessor.from_pretrained('onnxtyped')
 
@@ -120,8 +121,6 @@ class ocr():
 
         self.model_hw = ORTModelForVision2Seq.from_pretrained("onnxhw").to(device)
         '''
-        
-
         #ORTModelForVision2Seq.from_pretrained('microsoft/trocr-large-str', export=True).save_pretrained("onnxstr")
 
         
@@ -133,7 +132,9 @@ class ocr():
 
         :return: Text detection, text recognition, and classification models
         """
-        self.field_classifier = pickle.load(open("./ml_models/label_classifiers/etc_model.sav", 'rb'))
+        #self.field_classifier = pickle.load(open("./ml_models/label_classifiers/etc_model.sav", 'rb'))
+        self.field_classifier = InferenceSession("./ml_models/label_classifiers/field_onnx_etc_model.onnx" \
+                        , providers=["CPUExecutionProvider"])
 
 def dir_validation(dir):
     """
@@ -147,6 +148,7 @@ def dir_validation(dir):
                             'pbm', 'pgm', 'ppm', 'pxm', 'pnm', 'pfm', 'sr', 'ras', 'tiff', 'tif',
                             'exr', 'hdr', 'pic'
                             ]
+    
     if (len(dir) % 2) == 1:
         return 201
     for file in dir:
@@ -190,120 +192,6 @@ def most_frequent(lst):
     index = np.argmax(counts)
     return unique[index]
 
-'''
-def img_recognition(img_path):
-    """
-    Function to perform the bulk of the text recognition tasks
-
-    :param img_path: Path of image to be processed
-    :param processor_typed: Processor for typed TROCR
-    :param model_typed: Model for typed TROCR
-    :param processor_hw: Processor for handwritten TROCR
-    :param model_hw: Model for handwritten TROCR
-    :param writing_classifier: Classifier for text type(handwritten vs typed)
-    :param pipeline: Wrapper class for text detection model
-    :param total_images: Number of images to be processed
-    :param progress_signal: Signal for GUI process bar
-    :return: Dictionary with extracted data as {image path: extracted text}
-    """
-    global count
-
-    extractions = {}
-    ext_txt = ""
-    datapath1 = "extracted_data/label_data.csv" 
-    datapath2 = "extracted_data/type_timings.csv"
-    datapath3 = "extracted_data/recognition_timings.csv"
-    datapath4 = "extracted_data/detection_timings.csv"
-
-    time_file2 = open(datapath2, 'a')
-    time_file3 = open(datapath3, 'a')
-    time_file4 = open(datapath4, 'a')
-
-    print("Beggining extraction  on image: ", img_path)
-
-    #img = keras_ocr_tools.read(img_path)
-
-    img = cv2.imread(img_path)
-
-    detection_timing_start = time.time()
-    #pred = ocr_obj.detector.detect([img_path])
-    pred = text_detection(img)
-    detection_timing_end = time.time() - detection_timing_start
-    time_file4.write(str(detection_timing_end) + "\n")
-
-    #idx = 0
-    #out_p = 'C:/Users/Karkaras/Desktop/new_extracts'
-
-    pred = get_distance(pred)
-    pred = sorted(pred, key=lambda x:x['distance_y'])
-    pred = list(distinguish_groups(pred))
-
-    bar_img = cv2.imread("barsepimg.png")
-    for group in pred:
-        group = list(distinguish_rows(group))
-        #print(group)
-        image_crops = []
-        crop_labels = []
-        for row in group:
-            row = sorted(row, key=lambda x:x['distance_x'])
-            for box in row:
-                uby = int(round(box['top_left_y'])) if int(round(box['top_left_y'])) >= 0 else 0
-                lby = int(round(box['bottom_right_y'])) if int(round(box['bottom_right_y'])) >= 0 else 0
-                ubx = int(round(box['top_left_x'])) if int(round(box['top_left_x'])) >= 0 else 0
-                lbx = int(round(box['bottom_right_x'])) if int(round(box['bottom_right_x'])) >= 0 else 0
-                if ubx >= lbx:
-                    ubx = ubx - (ubx - lbx + 1)
-                if uby >= lby:
-                    uby = lby - (uby - lby + 1)
-                cropped_img = img[uby:lby, ubx:lbx]
-                
-                image_crops.append(cropped_img)
-                image_crops.append(bar_img)
-                type_timing_start = time.time()
-                crop_labels.append(text_classification(cropped_img))
-                type_timing_end = time.time() - type_timing_start
-                time_file2.write(str(type_timing_end) + "\n")
-
-        label = most_frequent(crop_labels)
-
-        cropped_img = hconcat_resize(image_crops)
-
-        recognition_timing_start = time.time()
-
-        if label in [ 'typed', 'cover' ]:
-            ext_txt = ext_txt + " " + text_recognition(
-                cropped_img,
-                label
-            )
-        elif label == 'handwritten':
-            ext_txt = ext_txt + " " + text_recognition(
-                cropped_img,
-                label
-            )
-
-        recognition_timing_end = time.time() - recognition_timing_start
-        time_file3.write(str(recognition_timing_end) + "\n")
-
-
-        new_df = pd.DataFrame({ "label":label, "file": img_path}, index = [0])
-        new_df.to_csv(datapath1, mode='a', index=False, header=False)
-        #ext_txt = ''.join('' if c in punctuation else c for c in ext_txt)
-        #ext_txt = ' '.join(ext_txt.split())
-
-        #name = os.path.join(out_p, os.path.basename(img_path)[:-4])
-        #name = name + str(idx) + ".png"
-        #cv2.imwrite(name, cropped_img)
-        #idx+=1
-
-    
-
-    extractions[img_path] = ext_txt + " "
-    print("Completed extraction on image: ", img_path)
-    #count += 1
-
-    return extractions
-'''
-
 def img_recognition(img_dir):
     """
     Function to perform the bulk of the text recognition tasks
@@ -341,8 +229,8 @@ def img_recognition(img_dir):
         detection_timing_end = time.time() - detection_timing_start
         time_file4.write(str(detection_timing_end) + "\n")
 
-        idx = 0
-        out_p = 'C:/Users/Karkaras/Desktop/new_extracts'
+        #idx = 0
+        #out_p = 'C:/Users/Karkaras/Desktop/new_extracts'
 
         pred = get_distance(pred)
         pred = sorted(pred, key=lambda x:x['distance_y'])
@@ -372,6 +260,13 @@ def img_recognition(img_dir):
                     crop_labels.append(text_classification(cropped_img))
                     type_timing_end = time.time() - type_timing_start
                     time_file2.write(str(type_timing_end) + "\n")
+
+                    '''
+                    name = os.path.join(out_p, os.path.basename(img_path)[:-4])
+                    name = name + str(idx) + ".png"
+                    cv2.imwrite(name, cropped_img)
+                    idx+=1
+                    '''
 
             label = most_frequent(crop_labels)
 
@@ -441,7 +336,8 @@ def text_detection(img):
     """
 
     results = ocr_obj.detector.predict(source = img, imgsz=768, conf = .07,
-                       iou = .12, augment = True, max_det = 1000, agnostic_nms=True)
+                       iou = .12, augment = True, max_det = 1000, agnostic_nms = True)
+    
     return [ box.numpy().boxes.xyxy.tolist() for box in results]
 
 def distinguish_groups(lst):
@@ -788,7 +684,6 @@ def get_225_deg_projection_features(th_img):
            sc_deg_225_max_run_count, normed_sc_deg_225_max, sc_deg_225_hist_mean, sc_deg_225_hist_var, \
            sc_deg_225_hist_std
 
-
 def text_classification(img):
     """
     Function to classify text within an image as handwritten or typed
@@ -798,11 +693,8 @@ def text_classification(img):
     """
     
     img_num = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
     th, th_img = cv2.threshold(img_num, 0,255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-
     out_list = get_gray_img_features(img_num, th)
-
     out_list_var = get_gabor_features(img_num)
 
     #### Horizontal Projections
@@ -833,37 +725,27 @@ def text_classification(img):
     out_list.extend([
         row_max_run_count, normed_row_max,
         row_hist_mean, row_hist_var, row_hist_std,
-
         col_max_run_count, normed_col_max,
         col_hist_mean, col_hist_var, col_hist_std,
-        
         deg_315_max_run_count, normed_deg_315_max,
         deg_315_hist_mean, deg_315_hist_var, deg_315_hist_std, 
-        
         deg_225_max_run_count, normed_deg_225_max,
         deg_225_hist_mean, deg_225_hist_var, deg_225_hist_std,
-        
         sc_row_max_run_count, normed_sc_row_max, 
         sc_row_hist_mean, sc_row_hist_var, sc_row_hist_std,
-        
         sc_col_max_run_count, normed_sc_col_max,
         sc_col_hist_mean, sc_col_hist_var, sc_col_hist_std, 
-        
         sc_deg_315_max_run_count, normed_sc_deg_315_max,
         sc_deg_315_hist_mean, sc_deg_315_hist_var, sc_deg_315_hist_std,
-        
         sc_deg_225_max_run_count, normed_sc_deg_225_max,
         sc_deg_225_hist_mean, sc_deg_225_hist_var, sc_deg_225_hist_std,   
     ])
-    
-    #out_list.extend(out_list_mean)
     out_list.extend(out_list_var)
-    
     ext_features = np.reshape(out_list, (1, -1))
-
-    label = ocr_obj.writing_classifier.predict(ext_features)
-
-    return label
+    #label = ocr_obj.writing_classifier.predict(ext_features)
+    output_name = ocr_obj.writing_classifier.get_inputs()[0].name
+    label = ocr_obj.writing_classifier.run(None, {output_name: ext_features.astype(np.float32)})[0]
+    return label[0]
 
 def text_feature_extractor(value, ocr_obj):
     """
@@ -876,7 +758,7 @@ def text_feature_extractor(value, ocr_obj):
     text_length = len(value)
     words = value.count(" ") + 1
     numbers = sum(c.isdigit() for c in value)
-    letters = sum(c.isalpha() for c in value)
+    #letters = sum(c.isalpha() for c in value)
     punctuation = sum((1 if c in string.punctuation else 0) for c in value)
     if text_length == 0:
         num_text_ratio = 0
@@ -886,9 +768,13 @@ def text_feature_extractor(value, ocr_obj):
         punc_text_ratio = punctuation/text_length
         
     avg_word_length = sum(len(word) for word in value) / words
+    
     ext_features = np.reshape(  [text_length, words, num_text_ratio,
                                  avg_word_length, punc_text_ratio] , (1, -1))
-    field = ocr_obj.field_classifier.predict(ext_features)
+    
+    #field = ocr_obj.field_classifier.predict(ext_features)
+    output_name = ocr_obj.field_classifier.get_inputs()[0].name
+    field = ocr_obj.field_classifier.run(None, {output_name: ext_features.astype(np.float32)})[0]
     return field[0]
 
 def pub_year_extraction(data):
@@ -915,50 +801,6 @@ def merge_dicts(data):
     for idx in range(len(data)):
         merged_dict.update(data[idx])
     return merged_dict
-
-'''
-def write_dataframe(data):
-    """
-    Function to write extracted data out to a csv
-
-    :param data: Dictionary containing data as {image path: extracted data}
-    :param label: Path of directory
-    :return: Path of csv containing the data
-    """
-
-    print("Writing Out Data to CSV")
-    ocr_obj = ocr(load_ocr_models=False, load_field_classifier=True) 
-    init_datapath = './extracted_data'
-    datapath = "extracted_data/extracted_data.csv"
-    os.makedirs(init_datapath, exist_ok=True)
-    data = merge_dicts(data)
-    output_data = pd.DataFrame(columns=['ID', 'Title', 'SuDoc', 'Publication Year', 'Path','Error Code','Query Status', 'Sudoc Image', 'Title Image'])
-    #output_data = pd.DataFrame(columns=['extract', 'text_type'])
-    title_key = sudoc_key = text_type_1_val = text_type_2_val = text_type_1_key = text_type_2_key = pub_year = ""
-    for idx, key in enumerate(data):
-        text_type = text_feature_extractor(data[key], ocr_obj)
-        if text_type == 'title':
-            text_type_1_key = 'Title'
-            text_type_1_val = data[key]
-            title_key = key
-        elif text_type == 'sudoc':
-            text_type_2_key = 'SuDoc'
-            pub_year = pub_year_extraction(data[key])
-            data[key] = data[key].replace(" ", "")
-            if data[key][:4].lower() == 'docs':
-                data[key] = data[key][4:]
-            text_type_2_val = data[key]
-            sudoc_key = key
-
-        output_data = pd.concat([output_data, pd.DataFrame([{'extract': data[key],
-                                                                'text_type': text_type}
-                                                            ])])
-        title_key = sudoc_key = text_type_1_val = text_type_2_val = text_type_1_key = text_type_2_key = pub_year = ""
-
-    output_data.to_csv(datapath, index=False, mode="a")
-    print("Completed Writing Step")
-    return datapath
-'''
 
 def write_dataframe(data):
     """
@@ -995,9 +837,9 @@ def write_dataframe(data):
         elif text_type == 'sudoc':
             text_type_2_key = 'SuDoc'
             pub_year = pub_year_extraction(data[key])
-            data[key] = data[key].replace(" ", "")
-            if data[key][:4].lower() == 'docs':
-                data[key] = data[key][4:]
+            #data[key] = data[key] #.replace(" ", "")
+            #if data[key][:4].lower() == 'docs':
+            #    data[key] = data[key][4:]
             text_type_2_val = data[key]
             sudoc_key = key
 
@@ -1059,42 +901,6 @@ def main():
         
 
     ]
-
-    '''
-    processed_file_count = 0
-    start_time = time.time()
-    with multiprocessing.Pool(processes=2) as pool:
-        for path in dirs:
-            extracted_data = []
-            collected_data = []
-            img_dir = os.listdir(path)
-            img_dir = [os.path.join(path, img) for img in img_dir]
-
-            #img_dir.sort(key=lambda x: os.path.getctime(x))
-
-            # images_coll = [ keras_ocr.tools.read(img) for img in img_dir ]
-
-            # extracted_data = par_img_proc_caller(images_coll)
-
-            total_images = len(img_dir)
-            processed_file_count += total_images
-            halfpoint = False
-            for idx in range(0, len(img_dir), 2):
-                collected_data.append(pool.apply_async(img_recognition, (img_dir[idx],))) 
-                collected_data.append(pool.apply_async(img_recognition, (img_dir[idx+1],))) 
-
-                for obj in range(len(collected_data)):
-                    extracted_data.append(collected_data[obj].get())
-
-                if (idx > int(len(img_dir)/2)) and halfpoint == False:
-                    halfpoint = True
-                    write_dataframe(extracted_data)
-                                
-                collected_data = []
-
-        pool.close()
-        pool.join() 
-        '''
         
     processed_file_count = 0
     start_time = time.time()

@@ -7,6 +7,14 @@ __pycache__/*
 extracted_data
 extracted_data/*
 
+onnxhw/*
+onnxstr/*
+onnxtyped/*
+
+runs/*
+
+tests/*
+
 ml_pipeline_timings.txt
 
 .dockerignore
