@@ -1,3 +1,0 @@
-Number of Images: 218
-Processing Time: 973.9171862602234
-Average Processing Time Per Image: 4.467510028716621
