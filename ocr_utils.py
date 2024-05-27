@@ -13,6 +13,7 @@ import ultralytics
 from onnxruntime import InferenceSession
 from ocr_test import *
 import glob
+#from heic2png import HEIC2PNG
 
 ### Call to skip warning function directly above and further warning suppression ###
 import warnings
@@ -59,7 +60,10 @@ def function_timer(timer_target):
             else: 
                 data_dir = get_out_dir_pth()
             start = time.time()
-            result = func(*args, **kwargs)
+            if timer_target == 'main_process':
+                result, ext_pth = func(*args, **kwargs)
+            else:
+                result = func(*args, **kwargs)
             end_timing = time.time() - start
             datapath = data_dir + timer_target + "_timings.txt"
             time_file = open(datapath, 'a')
@@ -89,6 +93,7 @@ def function_timer(timer_target):
                 fin_summ_pth = data_dir + "run_summary.csv"
                 final_summary.to_csv(fin_summ_pth, index=False)
                 print("Run statistics saved to: ", data_dir)
+                return result, ext_pth
             else:
                 time_file.write(str(end_timing) + "\n")
             return result
@@ -191,15 +196,22 @@ def dir_validation(dir):
 
     supported_file_types = [ 'bmp', 'dib', 'jpeg', 'jpg', 'jpe', 'jp2', 'png', 'webp', 'avif',
                             'pbm', 'pgm', 'ppm', 'pxm', 'pnm', 'pfm', 'sr', 'ras', 'tiff', 'tif',
-                            'exr', 'hdr', 'pic'
+                            'exr', 'hdr', 'pic', 'JPG'
                             ]
-    
+
     if (len(dir) % 2) == 1:
         return 201
-    for file in dir:
-        ext = file.split(".")[-1]
+
+    #print(dir)
+
+    for idx  in range(len(dir)):
+        ext = dir[idx].split(".")[-1]
+
         if ext not in supported_file_types:
+
             return 202
+
+    #print(dir)
     return 200
 
 def hconcat_resize(img_list, interpolation = cv2.INTER_CUBIC): 
@@ -459,7 +471,7 @@ def write_dataframe(data):
     os.makedirs(init_datapath, exist_ok=True)
     data = merge_dicts(data)
     output_data = pd.DataFrame(columns=['ID', 'Title', 'SuDoc', 'Publication Year', 
-                                        'Path','Error Code','Query Status',
+                                        'Path', 'Error Code','Query Status',
                                         'Sudoc Image', 'Title Image', 
                                         'Image 1 Path', 'Image 2 Path',
                                         'Image 1 Ext', 'Image 2 Ext'])
